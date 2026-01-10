@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI & DS CGPA Calculator</title>
+<!-- Actual department logo as favicon (may require conversion to .ico for full browser support) -->
+  <link rel="icon" href="images/Dept logo.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="images/Dept logo.jpg">
+  <!-- Alternative formats for better compatibility -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/Dept logo.jpg">
+  <link rel="icon" type="image/x-icon" href="images/Dept logo.jpg">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f4f8; color: #333; }
+    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #2c3e50; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #3498db; color: white; }
+    input, select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; width: 80px; text-align: center; }
+    button { background: #2ecc71; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px; }
+    button:hover { background: #27ae60; }
+    hr { margin: 25px 0; border: none; border-top: 2px solid #ccc; }
+    #result, #quickResult { color: #e67e22; font-weight: bold; margin-top: 10px; }
+    #warning { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo-container">
+        <img src="images/Dept logo.jpg" alt="Department Logo" class="logo-img">
+        <h1>AI & DS CGPA Calculator</h1>
+      </div>
+
+    <!-- Method 1: Per-Course Grades -->
+    <h2>Method 1: Enter Grades per Course</h2>
+    <label>Select Semester:</label>
+    <select id="semester" onchange="loadSubjects()">
+      <option value="">-- Select --</option>
+      <option value="1">Semester 1</option>
+      <option value="2">Semester 2</option>
+      <option value="3">Semester 3</option>
+      <option value="4">Semester 4</option>
+      <option value="5">Semester 5</option>
+      <option value="6">Semester 6</option>
+      <option value="7">Semester 7</option>
+      <option value="8">Semester 8</option>
+    </select>
+
+    <table id="subjectsTable">
+      <thead>
+        <tr>
+          <th>Course Code</th>
+          <th>Subject</th>
+          <th>Credits</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button onclick="calculateSGPA()">Calculate SGPA</button>
+    <h2 id="result"></h2>
+    <p id="warning"></p>
+
+    <hr>
+
+    <!-- Method 2: Quick CGPA from Semester GPA -->
+    <h2>Method 2: Quick CGPA from Semester GPA</h2>
+    <table id="quickGpaTable">
+      <thead>
+        <tr>
+          <th>Semester</th>
+          <th>Total Credits</th>
+          <th>GPA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows generated dynamically -->
+      </tbody>
+    </table>
+    <button onclick="calculateQuickCGPA()">Calculate CGPA (Quick Method)</button>
+    <button id="pdfExportBtn" title="Click to download your CGPA report as PDF">Export as PDF</button>
+    <h2 id="quickResult"></h2>
+    
+    <!-- Chart Container -->
+    <div class="chart-container">
+      <canvas id="sgpaChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- jsPDF Library for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
