@@ -11,32 +11,29 @@
   <link rel="icon" type="image/png" sizes="32x32" href="images/Dept logo.jpg">
   <link rel="icon" type="image/x-icon" href="images/Dept logo.jpg">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f0f4f8; color: #333; }
-    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #2c3e50; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    th { background: #3498db; color: white; }
-    input, select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; width: 80px; text-align: center; }
-    button { background: #2ecc71; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px; }
-    button:hover { background: #27ae60; }
-    hr { margin: 25px 0; border: none; border-top: 2px solid #ccc; }
-    #result, #quickResult { color: #e67e22; font-weight: bold; margin-top: 10px; }
-    #warning { color: red; font-weight: bold; }
-  </style>
 </head>
 <body>
 
   <div class="container">
     <div class="logo-container">
+      <div style="display:flex;gap:12px;align-items:center;">
         <img src="images/Dept logo.jpg" alt="Department Logo" class="logo-img">
-        <h1>AI & DS CGPA Calculator</h1>
+        <div>
+          <h1>AI & DS CGPA Calculator</h1>
+          <div style="font-size:0.9rem;color:#475569;">Regulations: <span class="badge">2021 / 2025</span></div>
+        </div>
       </div>
+    </div>
 
     <!-- Method 1: Per-Course Grades -->
     <h2>Method 1: Enter Grades per Course</h2>
-    <label>Select Semester:</label>
+    <label>Select Regulation:</label>
+    <select id="regulation" onchange="switchRegulation()">
+      <option value="2021">Regulation 2021</option>
+      <option value="2025">Regulation 2025</option>
+    </select>
+
+    <label style="margin-left:12px;">Select Semester:</label>
     <select id="semester" onchange="loadSubjects()">
       <option value="">-- Select --</option>
       <option value="1">Semester 1</option>

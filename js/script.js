@@ -100,25 +100,54 @@ function calculateSGPA() {
 
 // -------------------- Method 2: Quick CGPA --------------------
 
-// Precompute total credits per semester
-const semesterCredits = {};
-for (let sem = 1; sem <= 8; sem++) {
-  semesterCredits[sem] = curriculum[sem].reduce((sum, sub) => sum + sub.credit, 0);
+// Semester credits are computed based on the active `curriculum` object
+let semesterCredits = {};
+
+function computeSemesterCredits() {
+  semesterCredits = {};
+  // Determine the highest numbered semester available in the current curriculum
+  const semKeys = Object.keys(curriculum).map(k => parseInt(k)).filter(n => !isNaN(n));
+  const maxSem = semKeys.length ? Math.max(...semKeys) : 8;
+  for (let sem = 1; sem <= maxSem; sem++) {
+    semesterCredits[sem] = (curriculum[sem] || []).reduce((sum, sub) => sum + (sub.credit || 0), 0);
+  }
 }
 
-// Generate Quick GPA table dynamically
+// Generate Quick GPA table dynamically based on current semester credits
 function loadQuickGpaTable() {
   const tbody = document.querySelector("#quickGpaTable tbody");
   tbody.innerHTML = "";
-  for (let sem = 1; sem <= 8; sem++) {
+  const maxSem = Object.keys(semesterCredits).length ? Math.max(...Object.keys(semesterCredits).map(k=>parseInt(k))) : 8;
+  for (let sem = 1; sem <= maxSem; sem++) {
+    const credits = semesterCredits[sem] || 0;
     const row = `
       <tr>
         <td>Semester ${sem}</td>
-        <td>${semesterCredits[sem]}</td>
+        <td>${credits}</td>
         <td><input type="number" step="0.01" id="quickGpa-${sem}" placeholder="e.g. 9.23"></td>
       </tr>
     `;
     tbody.innerHTML += row;
+  }
+}
+
+// Switch active regulation (called by the regulation select element)
+function switchRegulation() {
+  const sel = document.getElementById('regulation');
+  if (!sel) return;
+  const reg = sel.value;
+  if (window.curriculums && window.curriculums[reg]) {
+    window.curriculum = window.curriculums[reg];
+    curriculum = window.curriculum; // keep compatibility
+    computeSemesterCredits();
+    // Reset UI tables
+    loadQuickGpaTable();
+    document.querySelector('#subjectsTable tbody').innerHTML = '';
+    document.getElementById('result').innerText = '';
+    document.getElementById('quickResult').innerText = '';
+    document.getElementById('warning').innerText = '';
+    // Refresh chart
+    setTimeout(updateSgpaChart, 100);
   }
 }
 
@@ -451,8 +480,16 @@ window.addEventListener('load', attachPdfButtonListener);
 
 // -------------------- Initialize on Page Load --------------------
 window.onload = () => {
+  // Ensure the regulation selector (if present) matches the default curriculum
+  const regSel = document.getElementById('regulation');
+  if (regSel && window.curriculums) {
+    // default to 2021 if available
+    regSel.value = window.curriculums['2021'] ? '2021' : Object.keys(window.curriculums)[0];
+  }
+
+  computeSemesterCredits();
   loadQuickGpaTable();
-  
+
   // Initialize chart after a brief delay to ensure DOM is ready
   setTimeout(updateSgpaChart, 500);
 };
